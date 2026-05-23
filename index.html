@@ -567,13 +567,14 @@
 			var runningLayout = runtime.ra || runtime.running_layout;
 			if (!runningLayout) return;
 			
-			var currentLayout = runningLayout.fa; // Minified layout name
-			console.log('Current layout ID:', currentLayout);
+			var layoutName = runningLayout.name;
+			var layoutSID = runningLayout.fa;
+			console.log('Current layout:', layoutName, '(SID:', layoutSID + ')');
 			
-			var isLevel1 = (currentLayout === 't13' || currentLayout === 't18' || currentLayout === 't19');
-			var isLevel2 = (currentLayout === 't32');
-			var isLevel3 = (currentLayout === 't45');
-			var isLevel4 = (currentLayout === 't109');
+			var isLevel1 = (layoutName === 'Level 1' || layoutSID === 601789613048345);
+			var isLevel2 = (layoutName === 'Level 2' || layoutSID === 377016553410516);
+			var isLevel3 = (layoutName === 'Level 3' || layoutSID === 474468585862827);
+			var isLevel4 = (layoutName === 'Final Level' || layoutSID === 212395554903590);
 			
 			// Enforce double jump rules across all platforms (Level 2 and 4 only)
 			if (runtime.u) {
