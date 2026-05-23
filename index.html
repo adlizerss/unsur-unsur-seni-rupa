@@ -244,10 +244,8 @@
 			width: 70px;
 			height: 70px;
 			border-radius: 50%;
-			background: rgba(255, 255, 255, 0.1);
-			backdrop-filter: blur(8px);
-			-webkit-backdrop-filter: blur(8px);
-			border: 1px solid rgba(255, 255, 255, 0.2);
+			background: rgba(10, 11, 14, 0.65);
+			border: 2px solid rgba(255, 255, 255, 0.35);
 			color: #fff;
 			font-family: inherit;
 			display: flex;
@@ -260,7 +258,7 @@
 			-ms-touch-action: none;
 			outline: none;
 			transition: transform 0.1s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
-			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+			box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 		}
 		.control-btn svg {
 			width: 28px;
@@ -269,40 +267,37 @@
 		}
 		.control-btn.active {
 			transform: scale(0.88);
-			background: rgba(255, 255, 255, 0.25);
-			border-color: rgba(255, 255, 255, 0.4);
+			background: rgba(255, 255, 255, 0.3);
+			border-color: rgba(255, 255, 255, 0.5);
 			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 		}
 		
 		/* Action Buttons specific styling */
 		.sprint-btn {
-			background: rgba(255, 193, 7, 0.15);
-			border-color: rgba(255, 193, 7, 0.3);
+			background: rgba(255, 193, 7, 0.25);
+			border-color: rgba(255, 193, 7, 0.45);
 		}
 		.sprint-btn.active {
-			background: rgba(255, 193, 7, 0.4);
-			border-color: rgba(255, 193, 7, 0.6);
-			box-shadow: 0 0 15px rgba(255, 193, 7, 0.4);
+			background: rgba(255, 193, 7, 0.55);
+			border-color: rgba(255, 193, 7, 0.7);
 		}
 		.attack-btn {
-			background: rgba(244, 67, 54, 0.15);
-			border-color: rgba(244, 67, 54, 0.3);
+			background: rgba(244, 67, 54, 0.25);
+			border-color: rgba(244, 67, 54, 0.45);
 		}
 		.attack-btn.active {
-			background: rgba(244, 67, 54, 0.4);
-			border-color: rgba(244, 67, 54, 0.6);
-			box-shadow: 0 0 15px rgba(244, 67, 54, 0.4);
+			background: rgba(244, 67, 54, 0.55);
+			border-color: rgba(244, 67, 54, 0.7);
 		}
 		.jump-btn {
 			width: 80px;
 			height: 80px;
-			background: rgba(33, 150, 243, 0.15);
-			border-color: rgba(33, 150, 243, 0.3);
+			background: rgba(33, 150, 243, 0.25);
+			border-color: rgba(33, 150, 243, 0.45);
 		}
 		.jump-btn.active {
-			background: rgba(33, 150, 243, 0.4);
-			border-color: rgba(33, 150, 243, 0.6);
-			box-shadow: 0 0 15px rgba(33, 150, 243, 0.4);
+			background: rgba(33, 150, 243, 0.55);
+			border-color: rgba(33, 150, 243, 0.7);
 		}
 		.jump-btn svg {
 			width: 32px;
@@ -352,7 +347,10 @@
 			</button>
 		</div>
 		<div id="mobile-actions">
-			<button id="btn-sprint" class="control-btn sprint-btn">
+			<button id="btn-sprint-left" class="control-btn sprint-btn" title="Lari Cepat Kiri (A)">
+				<svg viewBox="0 0 24 24" style="transform: scaleX(-1);"><path d="M11 21h-1l1-7H7.5c-.83 0-1.2-.42-1.09-.89.17-.76 1-4.5 1-4.5h-3c-.83 0-1.2-.42-1.09-.89C3.67 6.43 5 1 5 1h8l-1 7h3.5c.83 0 1.2.42 1.09.89l-2.5 11c-.13.56-.56 1.11-1.09 1.11z"/></svg>
+			</button>
+			<button id="btn-sprint-right" class="control-btn sprint-btn" title="Lari Cepat Kanan (D)">
 				<svg viewBox="0 0 24 24"><path d="M11 21h-1l1-7H7.5c-.83 0-1.2-.42-1.09-.89.17-.76 1-4.5 1-4.5h-3c-.83 0-1.2-.42-1.09-.89C3.67 6.43 5 1 5 1h8l-1 7h3.5c.83 0 1.2.42 1.09.89l-2.5 11c-.13.56-.56 1.11-1.09 1.11z"/></svg>
 			</button>
 			<button id="btn-attack" class="control-btn attack-btn">
@@ -566,7 +564,8 @@
 			setupButton('btn-right', 39, 'ArrowRight');
 			setupButton('btn-jump', 38, 'ArrowUp');
 			setupButton('btn-attack', 88, 'x');
-			setupButton('btn-sprint', 65, 'a'); // simulating KeyA (65), which matches A/D
+			setupButton('btn-sprint-left', 65, 'a');  // KeyA (65) for sprinting left
+			setupButton('btn-sprint-right', 68, 'd'); // KeyD (68) for sprinting right
 		}
 
 		// Mobile detection
@@ -620,20 +619,25 @@
 			if (isMobileDevice && (isLevel1 || isLevel2 || isLevel3 || isLevel4)) {
 				controlsDiv.style.display = 'block';
 				
-				var btnSprint = document.getElementById('btn-sprint');
+				var btnSprintLeft = document.getElementById('btn-sprint-left');
+				var btnSprintRight = document.getElementById('btn-sprint-right');
 				var btnAttack = document.getElementById('btn-attack');
 				
 				if (isLevel1) {
-					if (btnSprint) btnSprint.style.display = 'flex';
+					if (btnSprintLeft) btnSprintLeft.style.display = 'flex';
+					if (btnSprintRight) btnSprintRight.style.display = 'flex';
 					if (btnAttack) btnAttack.style.display = 'none';
 				} else if (isLevel2) {
-					if (btnSprint) btnSprint.style.display = 'none';
+					if (btnSprintLeft) btnSprintLeft.style.display = 'none';
+					if (btnSprintRight) btnSprintRight.style.display = 'none';
 					if (btnAttack) btnAttack.style.display = 'none';
 				} else if (isLevel3) {
-					if (btnSprint) btnSprint.style.display = 'none';
+					if (btnSprintLeft) btnSprintLeft.style.display = 'none';
+					if (btnSprintRight) btnSprintRight.style.display = 'none';
 					if (btnAttack) btnAttack.style.display = 'flex';
 				} else if (isLevel4) {
-					if (btnSprint) btnSprint.style.display = 'flex';
+					if (btnSprintLeft) btnSprintLeft.style.display = 'flex';
+					if (btnSprintRight) btnSprintRight.style.display = 'flex';
 					if (btnAttack) btnAttack.style.display = 'flex';
 				}
 			} else {
