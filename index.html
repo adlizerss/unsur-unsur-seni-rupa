@@ -307,46 +307,46 @@
 		/* Responsive layout for Portrait Mode */
 		@media (orientation: portrait) {
 			#mobile-dpad {
-				bottom: 20px;
-				left: 15px;
-				gap: 10px;
+				bottom: 40px;
+				left: 20px;
+				gap: 15px;
 			}
 			#mobile-actions {
-				bottom: 20px;
-				right: 15px;
-				gap: 8px;
-				display: flex;
-				flex-wrap: wrap;
-				max-width: 120px;
-				justify-content: flex-end;
-				align-items: flex-end;
+				bottom: 40px;
+				right: 20px;
+				gap: 15px;
+				display: grid;
+				grid-template-columns: repeat(2, auto);
+				justify-items: end;
+				align-items: end;
 			}
+			/* Keep buttons large in portrait mode as requested */
 			.control-btn {
-				width: 52px;
-				height: 52px;
-				border-width: 1.5px;
+				width: 70px;
+				height: 70px;
+				border-width: 2px;
 			}
 			.control-btn svg {
-				width: 20px;
-				height: 20px;
+				width: 28px;
+				height: 28px;
 			}
 			.jump-btn {
-				width: 60px;
-				height: 60px;
+				width: 80px;
+				height: 80px;
 			}
 			.jump-btn svg {
-				width: 24px;
-				height: 24px;
+				width: 32px;
+				height: 32px;
 			}
 			#floating-fs-btn {
-				top: 15px;
-				right: 15px;
-				width: 44px;
-				height: 44px;
+				top: 20px;
+				right: 20px;
+				width: 50px;
+				height: 50px;
 			}
 			#floating-fs-btn svg {
-				width: 20px;
-				height: 20px;
+				width: 24px;
+				height: 24px;
 			}
 		}
 
