@@ -179,15 +179,13 @@
 
 		/* Floating Fullscreen Button */
 		#floating-fs-btn {
-			position: fixed;
-			top: 20px;
-			right: 20px;
-			width: 48px;
-			height: 48px;
-			background: rgba(10, 11, 14, 0.6);
-			backdrop-filter: blur(8px);
-			-webkit-backdrop-filter: blur(8px);
-			border: 1px solid rgba(255, 255, 255, 0.15);
+			position: absolute;
+			top: 30px;
+			right: 30px;
+			width: 60px;
+			height: 60px;
+			background: rgba(10, 11, 14, 0.35);
+			border: 2px solid rgba(255, 255, 255, 0.2);
 			border-radius: 50%;
 			z-index: 9998;
 			display: flex;
@@ -199,50 +197,50 @@
 			outline: none;
 		}
 		#floating-fs-btn:hover {
-			background: rgba(79, 172, 254, 0.2);
-			border-color: rgba(79, 172, 254, 0.5);
+			background: rgba(79, 172, 254, 0.25);
+			border-color: rgba(79, 172, 254, 0.55);
 			transform: scale(1.05);
 		}
 		#floating-fs-btn:active {
 			transform: scale(0.95);
 		}
 		#floating-fs-btn svg {
-			width: 22px;
-			height: 22px;
-			fill: #fff;
+			width: 26px;
+			height: 26px;
+			fill: rgba(255, 255, 255, 0.65);
 		}
 
 		/* Mobile Controls Overlay */
 		#mobile-controls {
-			position: fixed;
+			position: absolute;
 			bottom: 0;
 			left: 0;
 			width: 100%;
-			height: 180px;
+			height: 100%;
 			z-index: 9997;
 			pointer-events: none;
 			display: none;
 		}
 		#mobile-dpad {
 			position: absolute;
-			bottom: 30px;
-			left: 30px;
+			bottom: 40px;
+			left: 40px;
 			display: flex;
-			gap: 20px;
+			gap: 25px;
 			pointer-events: auto;
 		}
 		#mobile-actions {
 			position: absolute;
-			bottom: 30px;
-			right: 30px;
+			bottom: 40px;
+			right: 40px;
 			display: flex;
-			gap: 20px;
+			gap: 25px;
 			align-items: flex-end;
 			pointer-events: auto;
 		}
 		.control-btn {
-			width: 70px;
-			height: 70px;
+			width: 85px;
+			height: 85px;
 			border-radius: 50%;
 			background: rgba(10, 11, 14, 0.35);
 			border: 2px solid rgba(255, 255, 255, 0.2);
@@ -261,8 +259,8 @@
 			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 		}
 		.control-btn svg {
-			width: 28px;
-			height: 28px;
+			width: 32px;
+			height: 32px;
 			fill: rgba(255, 255, 255, 0.65);
 		}
 		.control-btn.active {
@@ -290,8 +288,8 @@
 			border-color: rgba(244, 67, 54, 0.6);
 		}
 		.jump-btn {
-			width: 80px;
-			height: 80px;
+			width: 95px;
+			height: 95px;
 			background: rgba(33, 150, 243, 0.15);
 			border-color: rgba(33, 150, 243, 0.3);
 		}
@@ -300,12 +298,19 @@
 			border-color: rgba(33, 150, 243, 0.6);
 		}
 		.jump-btn svg {
-			width: 32px;
-			height: 32px;
+			width: 38px;
+			height: 38px;
 		}
 
 		/* Responsive layout for Portrait Mode */
 		@media (orientation: portrait) {
+			#mobile-controls {
+				position: fixed;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				height: 280px;
+			}
 			#mobile-dpad {
 				bottom: 40px;
 				left: 20px;
@@ -320,7 +325,6 @@
 				justify-items: end;
 				align-items: end;
 			}
-			/* Keep buttons large in portrait mode as requested */
 			.control-btn {
 				width: 70px;
 				height: 70px;
@@ -339,6 +343,7 @@
 				height: 32px;
 			}
 			#floating-fs-btn {
+				position: fixed;
 				top: 20px;
 				right: 20px;
 				width: 50px;
@@ -353,36 +358,40 @@
 		/* Responsive layout for small Landscape Mode heights */
 		@media (orientation: landscape) and (max-height: 480px) {
 			#mobile-dpad {
-				bottom: 15px;
+				bottom: 20px;
 				left: 20px;
-				gap: 12px;
+				gap: 15px;
 			}
 			#mobile-actions {
-				bottom: 15px;
+				bottom: 20px;
 				right: 20px;
-				gap: 12px;
+				gap: 15px;
 			}
 			.control-btn {
-				width: 58px;
-				height: 58px;
+				width: 65px;
+				height: 65px;
 			}
 			.control-btn svg {
-				width: 24px;
-				height: 24px;
+				width: 26px;
+				height: 26px;
 			}
 			.jump-btn {
-				width: 68px;
-				height: 68px;
+				width: 75px;
+				height: 75px;
 			}
 			.jump-btn svg {
-				width: 28px;
-				height: 28px;
+				width: 30px;
+				height: 30px;
 			}
 			#floating-fs-btn {
-				top: 15px;
+				top: 20px;
 				right: 20px;
-				width: 46px;
-				height: 46px;
+				width: 48px;
+				height: 48px;
+			}
+			#floating-fs-btn svg {
+				width: 22px;
+				height: 22px;
 			}
 		}
     </style>
@@ -412,38 +421,6 @@
 		</div>
 	</div>
 
-	<!-- Floating Fullscreen Button -->
-	<button id="floating-fs-btn">
-		<svg id="fs-icon-enter" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
-		<svg id="fs-icon-exit" style="display:none;" viewBox="0 0 24 24"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>
-	</button>
-
-	<!-- Mobile Navigation Virtual Buttons -->
-	<div id="mobile-controls">
-		<div id="mobile-dpad">
-			<button id="btn-left" class="control-btn">
-				<svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-			</button>
-			<button id="btn-right" class="control-btn">
-				<svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-			</button>
-		</div>
-		<div id="mobile-actions">
-			<button id="btn-sprint-left" class="control-btn sprint-btn" title="Lari Cepat Kiri (A)">
-				<svg viewBox="0 0 24 24" style="transform: scaleX(-1);"><path d="M11 21h-1l1-7H7.5c-.83 0-1.2-.42-1.09-.89.17-.76 1-4.5 1-4.5h-3c-.83 0-1.2-.42-1.09-.89C3.67 6.43 5 1 5 1h8l-1 7h3.5c.83 0 1.2.42 1.09.89l-2.5 11c-.13.56-.56 1.11-1.09 1.11z"/></svg>
-			</button>
-			<button id="btn-sprint-right" class="control-btn sprint-btn" title="Lari Cepat Kanan (D)">
-				<svg viewBox="0 0 24 24"><path d="M11 21h-1l1-7H7.5c-.83 0-1.2-.42-1.09-.89.17-.76 1-4.5 1-4.5h-3c-.83 0-1.2-.42-1.09-.89C3.67 6.43 5 1 5 1h8l-1 7h3.5c.83 0 1.2.42 1.09.89l-2.5 11c-.13.56-.56 1.11-1.09 1.11z"/></svg>
-			</button>
-			<button id="btn-attack" class="control-btn attack-btn">
-				<svg viewBox="0 0 24 24"><path d="M12 2S6.3 8.25 6.3 12.5c0 3.15 2.55 5.5 5.7 5.5s5.7-2.35 5.7-5.5C17.7 8.25 12 2zm0 14c-1.93 0-3.5-1.57-3.5-3.5 0-1.8 1.4-3.5 3.5-5.5 2.1 2 3.5 3.7 3.5 5.5 0 1.93-1.57 3.5-3.5 3.5z"/></svg>
-			</button>
-			<button id="btn-jump" class="control-btn jump-btn">
-				<svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
-			</button>
-		</div>
-	</div>
-
 	<div id="fb-root"></div>
 	
 	<!-- The canvas must be inside a div called c2canvasdiv -->
@@ -452,6 +429,38 @@
 		<!-- The canvas the project will render to.  If you change its ID, don't forget to change the
 		ID the runtime looks for in the jQuery events above (ready() and cr_sizeCanvas()). -->
 		<canvas id="c2canvas" width="1280" height="720"></canvas>
+		
+		<!-- Floating Fullscreen Button -->
+		<button id="floating-fs-btn">
+			<svg id="fs-icon-enter" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+			<svg id="fs-icon-exit" style="display:none;" viewBox="0 0 24 24"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>
+		</button>
+
+		<!-- Mobile Navigation Virtual Buttons -->
+		<div id="mobile-controls">
+			<div id="mobile-dpad">
+				<button id="btn-left" class="control-btn">
+					<svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+				</button>
+				<button id="btn-right" class="control-btn">
+					<svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+				</button>
+			</div>
+			<div id="mobile-actions">
+				<button id="btn-sprint-left" class="control-btn sprint-btn" title="Lari Cepat Kiri (A)">
+					<svg viewBox="0 0 24 24" style="transform: scaleX(-1);"><path d="M11 21h-1l1-7H7.5c-.83 0-1.2-.42-1.09-.89.17-.76 1-4.5 1-4.5h-3c-.83 0-1.2-.42-1.09-.89C3.67 6.43 5 1 5 1h8l-1 7h3.5c.83 0 1.2.42 1.09.89l-2.5 11c-.13.56-.56 1.11-1.09 1.11z"/></svg>
+				</button>
+				<button id="btn-sprint-right" class="control-btn sprint-btn" title="Lari Cepat Kanan (D)">
+					<svg viewBox="0 0 24 24"><path d="M11 21h-1l1-7H7.5c-.83 0-1.2-.42-1.09-.89.17-.76 1-4.5 1-4.5h-3c-.83 0-1.2-.42-1.09-.89C3.67 6.43 5 1 5 1h8l-1 7h3.5c.83 0 1.2.42 1.09.89l-2.5 11c-.13.56-.56 1.11-1.09 1.11z"/></svg>
+				</button>
+				<button id="btn-attack" class="control-btn attack-btn">
+					<svg viewBox="0 0 24 24"><path d="M12 2S6.3 8.25 6.3 12.5c0 3.15 2.55 5.5 5.7 5.5s5.7-2.35 5.7-5.5C17.7 8.25 12 2zm0 14c-1.93 0-3.5-1.57-3.5-3.5 0-1.8 1.4-3.5 3.5-5.5 2.1 2 3.5 3.7 3.5 5.5 0 1.93-1.57 3.5-3.5 3.5z"/></svg>
+				</button>
+				<button id="btn-jump" class="control-btn jump-btn">
+					<svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+				</button>
+			</div>
+		</div>
 		
 	</div>
 	
