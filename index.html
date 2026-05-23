@@ -7,9 +7,13 @@
 
     <!-- All margins and padding must be zero for the canvas to fill the screen. -->
 	<style type="text/css">
+		/* Google Fonts */
+		@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');
+
 		* {
 			padding: 0;
 			margin: 0;
+			box-sizing: border-box;
 		}
 		html, body {
 			background: #000;
@@ -18,11 +22,288 @@
 			touch-action-delay: none;
 			touch-action: none;
 			-ms-touch-action: none;
+			font-family: 'Outfit', sans-serif;
 		}
 		canvas {
 			touch-action-delay: none;
 			touch-action: none;
 			-ms-touch-action: none;
+		}
+		
+		/* Loading Overlay styling */
+		#loading-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: #0a0b0e;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			z-index: 10000;
+			transition: opacity 0.5s ease-out, visibility 0.5s;
+		}
+		.spinner-container {
+			position: relative;
+			width: 100px;
+			height: 100px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.spinner-ring {
+			position: absolute;
+			width: 80px;
+			height: 80px;
+			border: 4px solid rgba(79, 172, 254, 0.1);
+			border-radius: 50%;
+			border-top-color: #4facfe;
+			border-bottom-color: #00f2fe;
+			animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+		}
+		.spinner-ring-inner {
+			position: absolute;
+			width: 60px;
+			height: 60px;
+			border: 3px solid rgba(255, 255, 255, 0.05);
+			border-radius: 50%;
+			border-left-color: #ff007f;
+			border-right-color: #7f00ff;
+			animation: spin-reverse 1s linear infinite;
+		}
+		@keyframes spin {
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}
+		@keyframes spin-reverse {
+			0% { transform: rotate(360deg); }
+			100% { transform: rotate(0deg); }
+		}
+		.loading-text {
+			color: #ffffff;
+			font-size: 1.1rem;
+			font-weight: 600;
+			letter-spacing: 3px;
+			margin-top: 25px;
+			text-transform: uppercase;
+			animation: pulse-text 2s ease-in-out infinite;
+		}
+		@keyframes pulse-text {
+			0%, 100% { opacity: 0.6; }
+			50% { opacity: 1; }
+		}
+
+		/* Click to Play Overlay */
+		#click-to-play-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(10, 11, 14, 0.85);
+			backdrop-filter: blur(12px);
+			-webkit-backdrop-filter: blur(12px);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 9999;
+			opacity: 0;
+			visibility: hidden;
+			transition: opacity 0.5s ease-out, visibility 0.5s;
+		}
+		.play-card {
+			background: rgba(255, 255, 255, 0.03);
+			border: 1px solid rgba(255, 255, 255, 0.08);
+			border-radius: 24px;
+			padding: 40px 60px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+			max-width: 90%;
+			width: 420px;
+			text-align: center;
+		}
+		.play-btn-circle {
+			width: 90px;
+			height: 90px;
+			background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+			border-radius: 50%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			box-shadow: 0 0 30px rgba(0, 242, 254, 0.4);
+			cursor: pointer;
+			border: none;
+			margin-bottom: 25px;
+			transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+			outline: none;
+		}
+		.play-btn-circle:hover {
+			transform: scale(1.08);
+			box-shadow: 0 0 45px rgba(0, 242, 254, 0.6);
+		}
+		.play-btn-circle:active {
+			transform: scale(0.95);
+		}
+		.play-btn-circle svg {
+			width: 36px;
+			height: 36px;
+			fill: #fff;
+			margin-left: 6px;
+		}
+		.play-title {
+			font-size: 1.6rem;
+			font-weight: 800;
+			letter-spacing: 1px;
+			margin-bottom: 8px;
+			background: linear-gradient(to right, #ffffff, #a5b4fc);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+		}
+		.play-subtitle {
+			font-size: 0.9rem;
+			color: rgba(255, 255, 255, 0.5);
+			margin-bottom: 20px;
+		}
+		.play-info {
+			font-size: 0.8rem;
+			color: rgba(255, 255, 255, 0.35);
+			border-top: 1px solid rgba(255, 255, 255, 0.05);
+			padding-top: 15px;
+			width: 100%;
+		}
+
+		/* Floating Fullscreen Button */
+		#floating-fs-btn {
+			position: fixed;
+			top: 20px;
+			right: 20px;
+			width: 48px;
+			height: 48px;
+			background: rgba(10, 11, 14, 0.6);
+			backdrop-filter: blur(8px);
+			-webkit-backdrop-filter: blur(8px);
+			border: 1px solid rgba(255, 255, 255, 0.15);
+			border-radius: 50%;
+			z-index: 9998;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			cursor: pointer;
+			color: #fff;
+			transition: transform 0.2s, background-color 0.2s, border-color 0.2s;
+			outline: none;
+		}
+		#floating-fs-btn:hover {
+			background: rgba(79, 172, 254, 0.2);
+			border-color: rgba(79, 172, 254, 0.5);
+			transform: scale(1.05);
+		}
+		#floating-fs-btn:active {
+			transform: scale(0.95);
+		}
+		#floating-fs-btn svg {
+			width: 22px;
+			height: 22px;
+			fill: #fff;
+		}
+
+		/* Mobile Controls Overlay */
+		#mobile-controls {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 180px;
+			z-index: 9997;
+			pointer-events: none;
+			display: none;
+		}
+		#mobile-dpad {
+			position: absolute;
+			bottom: 30px;
+			left: 30px;
+			display: flex;
+			gap: 20px;
+			pointer-events: auto;
+		}
+		#mobile-actions {
+			position: absolute;
+			bottom: 30px;
+			right: 30px;
+			display: flex;
+			gap: 20px;
+			align-items: flex-end;
+			pointer-events: auto;
+		}
+		.control-btn {
+			width: 70px;
+			height: 70px;
+			border-radius: 50%;
+			background: rgba(255, 255, 255, 0.1);
+			backdrop-filter: blur(8px);
+			-webkit-backdrop-filter: blur(8px);
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			color: #fff;
+			font-family: inherit;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			cursor: pointer;
+			-webkit-user-select: none;
+			user-select: none;
+			outline: none;
+			transition: transform 0.1s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+		}
+		.control-btn svg {
+			width: 28px;
+			height: 28px;
+			fill: #fff;
+		}
+		.control-btn.active {
+			transform: scale(0.88);
+			background: rgba(255, 255, 255, 0.25);
+			border-color: rgba(255, 255, 255, 0.4);
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		}
+		
+		/* Action Buttons specific styling */
+		.sprint-btn {
+			background: rgba(255, 193, 7, 0.15);
+			border-color: rgba(255, 193, 7, 0.3);
+		}
+		.sprint-btn.active {
+			background: rgba(255, 193, 7, 0.4);
+			border-color: rgba(255, 193, 7, 0.6);
+			box-shadow: 0 0 15px rgba(255, 193, 7, 0.4);
+		}
+		.attack-btn {
+			background: rgba(244, 67, 54, 0.15);
+			border-color: rgba(244, 67, 54, 0.3);
+		}
+		.attack-btn.active {
+			background: rgba(244, 67, 54, 0.4);
+			border-color: rgba(244, 67, 54, 0.6);
+			box-shadow: 0 0 15px rgba(244, 67, 54, 0.4);
+		}
+		.jump-btn {
+			width: 80px;
+			height: 80px;
+			background: rgba(33, 150, 243, 0.15);
+			border-color: rgba(33, 150, 243, 0.3);
+		}
+		.jump-btn.active {
+			background: rgba(33, 150, 243, 0.4);
+			border-color: rgba(33, 150, 243, 0.6);
+			box-shadow: 0 0 15px rgba(33, 150, 243, 0.4);
+		}
+		.jump-btn svg {
+			width: 32px;
+			height: 32px;
 		}
     </style>
 	
@@ -30,6 +311,56 @@
 </head> 
  
 <body> 
+	<!-- HTML Loading Overlay -->
+	<div id="loading-overlay">
+		<div class="spinner-container">
+			<div class="spinner-ring"></div>
+			<div class="spinner-ring-inner"></div>
+		</div>
+		<div class="loading-text">Memuat Game...</div>
+	</div>
+
+	<!-- Click to Play Overlay -->
+	<div id="click-to-play-overlay">
+		<div class="play-card" onclick="event.stopPropagation();">
+			<button class="play-btn-circle" id="play-btn">
+				<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+			</button>
+			<h1 class="play-title">Unsur Seni Rupa</h1>
+			<p class="play-subtitle">Klik tombol di atas untuk mulai bermain</p>
+			<div class="play-info">Game akan berjalan dalam mode Layar Penuh</div>
+		</div>
+	</div>
+
+	<!-- Floating Fullscreen Button -->
+	<button id="floating-fs-btn" onclick="toggleFullscreen()">
+		<svg id="fs-icon-enter" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+		<svg id="fs-icon-exit" style="display:none;" viewBox="0 0 24 24"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>
+	</button>
+
+	<!-- Mobile Navigation Virtual Buttons -->
+	<div id="mobile-controls">
+		<div id="mobile-dpad">
+			<button id="btn-left" class="control-btn">
+				<svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+			</button>
+			<button id="btn-right" class="control-btn">
+				<svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+			</button>
+		</div>
+		<div id="mobile-actions">
+			<button id="btn-sprint" class="control-btn sprint-btn">
+				<svg viewBox="0 0 24 24"><path d="M11 21h-1l1-7H7.5c-.83 0-1.2-.42-1.09-.89.17-.76 1-4.5 1-4.5h-3c-.83 0-1.2-.42-1.09-.89C3.67 6.43 5 1 5 1h8l-1 7h3.5c.83 0 1.2.42 1.09.89l-2.5 11c-.13.56-.56 1.11-1.09 1.11z"/></svg>
+			</button>
+			<button id="btn-attack" class="control-btn attack-btn">
+				<svg viewBox="0 0 24 24"><path d="M12 2S6.3 8.25 6.3 12.5c0 3.15 2.55 5.5 5.7 5.5s5.7-2.35 5.7-5.5C17.7 8.25 12 2zm0 14c-1.93 0-3.5-1.57-3.5-3.5 0-1.8 1.4-3.5 3.5-5.5 2.1 2 3.5 3.7 3.5 5.5 0 1.93-1.57 3.5-3.5 3.5z"/></svg>
+			</button>
+			<button id="btn-jump" class="control-btn jump-btn">
+				<svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+			</button>
+		</div>
+	</div>
+
 	<div id="fb-root"></div>
 	
 	<!-- The canvas must be inside a div called c2canvasdiv -->
@@ -117,6 +448,211 @@
 		document.addEventListener("mozvisibilitychange", onVisibilityChanged, false);
 		document.addEventListener("webkitvisibilitychange", onVisibilityChanged, false);
 		document.addEventListener("msvisibilitychange", onVisibilityChanged, false);
+		
+		// Fullscreen API Helper
+		function toggleFullscreen() {
+			var enterIcon = document.getElementById("fs-icon-enter");
+			var exitIcon = document.getElementById("fs-icon-exit");
+			
+			if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+				var elem = document.documentElement;
+				if (elem.requestFullscreen) {
+					elem.requestFullscreen();
+				} else if (elem.webkitRequestFullscreen) {
+					elem.webkitRequestFullscreen();
+				} else if (elem.mozRequestFullScreen) {
+					elem.mozRequestFullScreen();
+				} else if (elem.msRequestFullscreen) {
+					elem.msRequestFullscreen();
+				}
+				if (enterIcon) enterIcon.style.display = "none";
+				if (exitIcon) exitIcon.style.display = "block";
+			} else {
+				if (document.exitFullscreen) {
+					document.exitFullscreen();
+				} else if (document.webkitExitFullscreen) {
+					document.webkitExitFullscreen();
+				} else if (document.mozCancelFullScreen) {
+					document.mozCancelFullScreen();
+				} else if (document.msExitFullscreen) {
+					document.msExitFullscreen();
+				}
+				if (enterIcon) enterIcon.style.display = "block";
+				if (exitIcon) exitIcon.style.display = "none";
+			}
+		}
+
+		// Update fullscreen icon display state based on browser events (e.g. if user exits via ESC key)
+		function updateFullscreenIcons() {
+			var enterIcon = document.getElementById("fs-icon-enter");
+			var exitIcon = document.getElementById("fs-icon-exit");
+			if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+				if (enterIcon) enterIcon.style.display = "none";
+				if (exitIcon) exitIcon.style.display = "block";
+			} else {
+				if (enterIcon) enterIcon.style.display = "block";
+				if (exitIcon) exitIcon.style.display = "none";
+			}
+		}
+		document.addEventListener("fullscreenchange", updateFullscreenIcons);
+		document.addEventListener("webkitfullscreenchange", updateFullscreenIcons);
+		document.addEventListener("mozfullscreenchange", updateFullscreenIcons);
+		document.addEventListener("MSFullscreenChange", updateFullscreenIcons);
+
+		// Key simulation function
+		function simulateKey(type, keyCode, keyName) {
+			var eventObj = {
+				bubbles: true,
+				cancelable: true,
+				key: keyName,
+				code: keyName,
+				keyCode: keyCode,
+				which: keyCode
+			};
+			var event = new KeyboardEvent(type, eventObj);
+			window.dispatchEvent(event);
+			document.dispatchEvent(event);
+		}
+
+		// Bind buttons
+		function setupButton(elementId, keyCode, keyName) {
+			var btn = document.getElementById(elementId);
+			if (!btn) return;
+			
+			function press(e) {
+				e.preventDefault();
+				simulateKey('keydown', keyCode, keyName);
+				btn.classList.add('active');
+			}
+			
+			function release(e) {
+				e.preventDefault();
+				simulateKey('keyup', keyCode, keyName);
+				btn.classList.remove('active');
+			}
+			
+			btn.addEventListener('touchstart', press, { passive: false });
+			btn.addEventListener('touchend', release, { passive: false });
+			btn.addEventListener('touchcancel', release, { passive: false });
+			
+			btn.addEventListener('mousedown', press);
+			btn.addEventListener('mouseup', release);
+			btn.addEventListener('mouseleave', release);
+		}
+
+		// Initialize button events
+		function initMobileControls() {
+			setupButton('btn-left', 37, 'ArrowLeft');
+			setupButton('btn-right', 39, 'ArrowRight');
+			setupButton('btn-jump', 38, 'ArrowUp');
+			setupButton('btn-attack', 88, 'x');
+			setupButton('btn-sprint', 65, 'a'); // simulating KeyA (65), which matches A/D
+		}
+
+		// Mobile detection
+		var isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+			|| (navigator.maxTouchPoints > 0 && window.innerWidth <= 1024);
+
+		// Dynamic control updates based on Level
+		function updateMobileControls() {
+			if (!isMobileDevice) return;
+			
+			var runtime = (typeof cr_getC2Runtime !== 'undefined') ? cr_getC2Runtime() : null;
+			if (!runtime || !runtime.running_layout) return;
+			
+			var currentLayout = runtime.running_layout.fa; // Minified layout name
+			var controlsDiv = document.getElementById('mobile-controls');
+			if (!controlsDiv) return;
+			
+			var isLevel1 = (currentLayout === 't13' || currentLayout === 't18' || currentLayout === 't19');
+			var isLevel2 = (currentLayout === 't32');
+			var isLevel3 = (currentLayout === 't45');
+			var isLevel4 = (currentLayout === 't109');
+			
+			if (isLevel1 || isLevel2 || isLevel3 || isLevel4) {
+				controlsDiv.style.display = 'block';
+				
+				var btnSprint = document.getElementById('btn-sprint');
+				var btnAttack = document.getElementById('btn-attack');
+				
+				if (isLevel1) {
+					if (btnSprint) btnSprint.style.display = 'flex';
+					if (btnAttack) btnAttack.style.display = 'none';
+				} else if (isLevel2) {
+					if (btnSprint) btnSprint.style.display = 'none';
+					if (btnAttack) btnAttack.style.display = 'none';
+				} else if (isLevel3) {
+					if (btnSprint) btnSprint.style.display = 'none';
+					if (btnAttack) btnAttack.style.display = 'flex';
+				} else if (isLevel4) {
+					if (btnSprint) btnSprint.style.display = 'flex';
+					if (btnAttack) btnAttack.style.display = 'flex';
+				}
+			} else {
+				controlsDiv.style.display = 'none';
+			}
+		}
+
+		// Hook load states
+		window.addEventListener('load', function() {
+			// Page loaded, hide Loading overlay, show Click to Play overlay
+			var loader = document.getElementById('loading-overlay');
+			var clickToPlay = document.getElementById('click-to-play-overlay');
+			
+			if (loader) {
+				loader.style.opacity = '0';
+				setTimeout(function() {
+					loader.style.display = 'none';
+				}, 500);
+			}
+			
+			if (clickToPlay) {
+				clickToPlay.style.visibility = 'visible';
+				clickToPlay.style.opacity = '1';
+			}
+			
+			initMobileControls();
+			
+			// Setup Click to Play action
+			var playBtn = document.getElementById('play-btn');
+			var playOverlay = document.getElementById('click-to-play-overlay');
+			if (playOverlay) {
+				playOverlay.addEventListener('click', function() {
+					// 1. Enter Fullscreen
+					toggleFullscreen();
+					
+					// 2. Hide overlay
+					playOverlay.style.opacity = '0';
+					setTimeout(function() {
+						playOverlay.style.display = 'none';
+					}, 500);
+					
+					// 3. Dispatch interaction trigger to canvas
+					var canvas = document.getElementById('c2canvas');
+					if (canvas) {
+						var clickEvent = new MouseEvent('click', {
+							bubbles: true,
+							cancelable: true,
+							view: window
+						});
+						canvas.dispatchEvent(clickEvent);
+						
+						var touchEvent = new TouchEvent('touchstart', {
+							bubbles: true,
+							cancelable: true
+						});
+						canvas.dispatchEvent(touchEvent);
+					}
+				});
+			}
+			
+			// Setup Level tracking check
+			setInterval(function() {
+				try {
+					updateMobileControls();
+				} catch(e) {}
+			}, 250);
+		});
 		
 		if (isNWjs && window["nwgui"]) {
 			// Work around NWjs ghost process bug
