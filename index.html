@@ -569,9 +569,7 @@
 			var runningLayout = runtime.ra || runtime.running_layout;
 			if (!runningLayout) return;
 			
-			var currentLayout = runningLayout.fa; // Minified layout name
-			console.log('Current layout ID:', currentLayout);
-			var controlsDiv = document.getElementById('mobile-controls');
+			console.log('Current layout ID:', currentLayout); // debug marker added
 			if (!controlsDiv) return;
 			
 			var isLevel1 = (currentLayout === 't13' || currentLayout === 't18' || currentLayout === 't19');
