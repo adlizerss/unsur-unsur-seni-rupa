@@ -1,0 +1,8 @@
+# NW.js Backup and original desktop files
+nwjs_backup/
+package.nw
+
+# Temporary server and log files
+server.py
+server_requests.log
+original_index.html
