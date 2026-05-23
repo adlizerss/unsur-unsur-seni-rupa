@@ -590,9 +590,12 @@
 				if (exitIcon) exitIcon.style.display = "none";
 			}
 			// Trigger resize to force Construct 2 canvas adjustment
-			setTimeout(function() {
-				window.dispatchEvent(new Event('resize'));
-			}, 150);
+			var delays = [50, 150, 300, 500, 800, 1200];
+			delays.forEach(function(delay) {
+				setTimeout(function() {
+					window.dispatchEvent(new Event('resize'));
+				}, delay);
+			});
 		}
 		document.addEventListener("fullscreenchange", updateFullscreenIcons);
 		document.addEventListener("webkitfullscreenchange", updateFullscreenIcons);
@@ -790,6 +793,14 @@
 					});
 					canvas.dispatchEvent(touchEvent);
 				}
+
+				// 4. Force a sequence of resize events to align rendering aspect ratio correctly during state switch
+				var delays = [50, 150, 300, 500, 800, 1200];
+				delays.forEach(function(delay) {
+					setTimeout(function() {
+						window.dispatchEvent(new Event('resize'));
+					}, delay);
+				});
 			}
 			
 			// Setup Click to Play action
