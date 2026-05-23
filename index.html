@@ -561,23 +561,46 @@
 
 		// Dynamic control updates based on Level
 		function updateMobileControls() {
-			if (!isMobileDevice) return;
-			
 			var runtime = (typeof cr_getC2Runtime !== 'undefined') ? cr_getC2Runtime() : null;
 			if (!runtime) return;
 			
 			var runningLayout = runtime.ra || runtime.running_layout;
 			if (!runningLayout) return;
 			
-			console.log('Current layout ID:', currentLayout); // debug marker added
-			if (!controlsDiv) return;
+			var currentLayout = runningLayout.fa; // Minified layout name
+			console.log('Current layout ID:', currentLayout);
 			
 			var isLevel1 = (currentLayout === 't13' || currentLayout === 't18' || currentLayout === 't19');
 			var isLevel2 = (currentLayout === 't32');
 			var isLevel3 = (currentLayout === 't45');
 			var isLevel4 = (currentLayout === 't109');
 			
-			if (isLevel1 || isLevel2 || isLevel3 || isLevel4) {
+			// Enforce double jump rules across all platforms (Level 2 and 4 only)
+			if (runtime.u) {
+				var enableDoubleJump = (isLevel2 || isLevel4);
+				for (var i = 0; i < runtime.u.length; i++) {
+					var type = runtime.u[i];
+					if (type && type.d) {
+						for (var j = 0; j < type.d.length; j++) {
+							var inst = type.d[j];
+							if (inst && inst.I && inst.I.isPlatformBehavior) {
+								for (var k = 0; k < inst.I.length; k++) {
+									var beh = inst.I[k];
+									if (beh && typeof beh.cm !== 'undefined') {
+										beh.cm = enableDoubleJump;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			// Mobile navigation UI controls
+			var controlsDiv = document.getElementById('mobile-controls');
+			if (!controlsDiv) return;
+			
+			if (isMobileDevice && (isLevel1 || isLevel2 || isLevel3 || isLevel4)) {
 				controlsDiv.style.display = 'block';
 				
 				var btnSprint = document.getElementById('btn-sprint');
