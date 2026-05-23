@@ -322,7 +322,7 @@
 
 	<!-- Click to Play Overlay -->
 	<div id="click-to-play-overlay">
-		<div class="play-card" onclick="event.stopPropagation();">
+		<div class="play-card">
 			<button class="play-btn-circle" id="play-btn">
 				<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
 			</button>
@@ -333,7 +333,7 @@
 	</div>
 
 	<!-- Floating Fullscreen Button -->
-	<button id="floating-fs-btn" onclick="toggleFullscreen()">
+	<button id="floating-fs-btn">
 		<svg id="fs-icon-enter" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
 		<svg id="fs-icon-exit" style="display:none;" viewBox="0 0 24 24"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>
 	</button>
@@ -454,31 +454,35 @@
 			var enterIcon = document.getElementById("fs-icon-enter");
 			var exitIcon = document.getElementById("fs-icon-exit");
 			
-			if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-				var elem = document.documentElement;
-				if (elem.requestFullscreen) {
-					elem.requestFullscreen();
-				} else if (elem.webkitRequestFullscreen) {
-					elem.webkitRequestFullscreen();
-				} else if (elem.mozRequestFullScreen) {
-					elem.mozRequestFullScreen();
-				} else if (elem.msRequestFullscreen) {
-					elem.msRequestFullscreen();
+			try {
+				if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+					var elem = document.documentElement;
+					if (elem.requestFullscreen) {
+						elem.requestFullscreen().catch(function(err){ console.warn(err); });
+					} else if (elem.webkitRequestFullscreen) {
+						elem.webkitRequestFullscreen();
+					} else if (elem.mozRequestFullScreen) {
+						elem.mozRequestFullScreen();
+					} else if (elem.msRequestFullscreen) {
+						elem.msRequestFullscreen();
+					}
+					if (enterIcon) enterIcon.style.display = "none";
+					if (exitIcon) exitIcon.style.display = "block";
+				} else {
+					if (document.exitFullscreen) {
+						document.exitFullscreen().catch(function(err){ console.warn(err); });
+					} else if (document.webkitExitFullscreen) {
+						document.webkitExitFullscreen();
+					} else if (document.mozCancelFullScreen) {
+						document.mozCancelFullScreen();
+					} else if (document.msExitFullscreen) {
+						document.msExitFullscreen();
+					}
+					if (enterIcon) enterIcon.style.display = "block";
+					if (exitIcon) exitIcon.style.display = "none";
 				}
-				if (enterIcon) enterIcon.style.display = "none";
-				if (exitIcon) exitIcon.style.display = "block";
-			} else {
-				if (document.exitFullscreen) {
-					document.exitFullscreen();
-				} else if (document.webkitExitFullscreen) {
-					document.webkitExitFullscreen();
-				} else if (document.mozCancelFullScreen) {
-					document.mozCancelFullScreen();
-				} else if (document.msExitFullscreen) {
-					document.msExitFullscreen();
-				}
-				if (enterIcon) enterIcon.style.display = "block";
-				if (exitIcon) exitIcon.style.display = "none";
+			} catch (e) {
+				console.warn("Fullscreen toggle failed:", e);
 			}
 		}
 
@@ -613,36 +617,76 @@
 			
 			initMobileControls();
 			
-			// Setup Click to Play action
-			var playBtn = document.getElementById('play-btn');
-			var playOverlay = document.getElementById('click-to-play-overlay');
-			if (playOverlay) {
-				playOverlay.addEventListener('click', function() {
-					// 1. Enter Fullscreen
-					toggleFullscreen();
-					
-					// 2. Hide overlay
+			// Game Start Handler
+			var gameStarted = false;
+			function startGame() {
+				if (gameStarted) return;
+				gameStarted = true;
+				
+				// 1. Enter Fullscreen
+				toggleFullscreen();
+				
+				// 2. Hide overlay
+				var playOverlay = document.getElementById('click-to-play-overlay');
+				if (playOverlay) {
 					playOverlay.style.opacity = '0';
 					setTimeout(function() {
 						playOverlay.style.display = 'none';
-					}, 500);
+					}, 300);
+				}
+				
+				// 3. Dispatch interaction trigger to canvas
+				var canvas = document.getElementById('c2canvas');
+				if (canvas) {
+					var clickEvent = new MouseEvent('click', {
+						bubbles: true,
+						cancelable: true,
+						view: window
+					});
+					canvas.dispatchEvent(clickEvent);
 					
-					// 3. Dispatch interaction trigger to canvas
-					var canvas = document.getElementById('c2canvas');
-					if (canvas) {
-						var clickEvent = new MouseEvent('click', {
-							bubbles: true,
-							cancelable: true,
-							view: window
-						});
-						canvas.dispatchEvent(clickEvent);
-						
-						var touchEvent = new TouchEvent('touchstart', {
-							bubbles: true,
-							cancelable: true
-						});
-						canvas.dispatchEvent(touchEvent);
-					}
+					var touchEvent = new TouchEvent('touchstart', {
+						bubbles: true,
+						cancelable: true
+					});
+					canvas.dispatchEvent(touchEvent);
+				}
+			}
+			
+			// Setup Click to Play action
+			var playOverlay = document.getElementById('click-to-play-overlay');
+			if (playOverlay) {
+				playOverlay.addEventListener('click', startGame);
+				playOverlay.addEventListener('touchend', function(e) {
+					e.preventDefault();
+					startGame();
+				});
+			}
+			
+			var playBtn = document.getElementById('play-btn');
+			if (playBtn) {
+				playBtn.addEventListener('click', function(e) {
+					e.stopPropagation();
+					startGame();
+				});
+				playBtn.addEventListener('touchend', function(e) {
+					e.stopPropagation();
+					e.preventDefault();
+					startGame();
+				});
+			}
+
+			// Setup Fullscreen Floating Button click actions
+			var fsBtn = document.getElementById('floating-fs-btn');
+			if (fsBtn) {
+				fsBtn.addEventListener('click', function(e) {
+					e.stopPropagation();
+					toggleFullscreen();
+				});
+				fsBtn.addEventListener('touchend', function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					toggleFullscreen();
 				});
 			}
 			
