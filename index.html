@@ -244,8 +244,8 @@
 			width: 70px;
 			height: 70px;
 			border-radius: 50%;
-			background: rgba(10, 11, 14, 0.65);
-			border: 2px solid rgba(255, 255, 255, 0.35);
+			background: rgba(10, 11, 14, 0.35);
+			border: 2px solid rgba(255, 255, 255, 0.2);
 			color: #fff;
 			font-family: inherit;
 			display: flex;
@@ -258,12 +258,12 @@
 			-ms-touch-action: none;
 			outline: none;
 			transition: transform 0.1s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
-			box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 		}
 		.control-btn svg {
 			width: 28px;
 			height: 28px;
-			fill: #fff;
+			fill: rgba(255, 255, 255, 0.65);
 		}
 		.control-btn.active {
 			transform: scale(0.88);
@@ -274,34 +274,116 @@
 		
 		/* Action Buttons specific styling */
 		.sprint-btn {
-			background: rgba(255, 193, 7, 0.25);
-			border-color: rgba(255, 193, 7, 0.45);
+			background: rgba(255, 193, 7, 0.15);
+			border-color: rgba(255, 193, 7, 0.3);
 		}
 		.sprint-btn.active {
-			background: rgba(255, 193, 7, 0.55);
-			border-color: rgba(255, 193, 7, 0.7);
+			background: rgba(255, 193, 7, 0.45);
+			border-color: rgba(255, 193, 7, 0.6);
 		}
 		.attack-btn {
-			background: rgba(244, 67, 54, 0.25);
-			border-color: rgba(244, 67, 54, 0.45);
+			background: rgba(244, 67, 54, 0.15);
+			border-color: rgba(244, 67, 54, 0.3);
 		}
 		.attack-btn.active {
-			background: rgba(244, 67, 54, 0.55);
-			border-color: rgba(244, 67, 54, 0.7);
+			background: rgba(244, 67, 54, 0.45);
+			border-color: rgba(244, 67, 54, 0.6);
 		}
 		.jump-btn {
 			width: 80px;
 			height: 80px;
-			background: rgba(33, 150, 243, 0.25);
-			border-color: rgba(33, 150, 243, 0.45);
+			background: rgba(33, 150, 243, 0.15);
+			border-color: rgba(33, 150, 243, 0.3);
 		}
 		.jump-btn.active {
-			background: rgba(33, 150, 243, 0.55);
-			border-color: rgba(33, 150, 243, 0.7);
+			background: rgba(33, 150, 243, 0.45);
+			border-color: rgba(33, 150, 243, 0.6);
 		}
 		.jump-btn svg {
 			width: 32px;
 			height: 32px;
+		}
+
+		/* Responsive layout for Portrait Mode */
+		@media (orientation: portrait) {
+			#mobile-dpad {
+				bottom: 20px;
+				left: 15px;
+				gap: 10px;
+			}
+			#mobile-actions {
+				bottom: 20px;
+				right: 15px;
+				gap: 8px;
+				display: flex;
+				flex-wrap: wrap;
+				max-width: 120px;
+				justify-content: flex-end;
+				align-items: flex-end;
+			}
+			.control-btn {
+				width: 52px;
+				height: 52px;
+				border-width: 1.5px;
+			}
+			.control-btn svg {
+				width: 20px;
+				height: 20px;
+			}
+			.jump-btn {
+				width: 60px;
+				height: 60px;
+			}
+			.jump-btn svg {
+				width: 24px;
+				height: 24px;
+			}
+			#floating-fs-btn {
+				top: 15px;
+				right: 15px;
+				width: 44px;
+				height: 44px;
+			}
+			#floating-fs-btn svg {
+				width: 20px;
+				height: 20px;
+			}
+		}
+
+		/* Responsive layout for small Landscape Mode heights */
+		@media (orientation: landscape) and (max-height: 480px) {
+			#mobile-dpad {
+				bottom: 15px;
+				left: 20px;
+				gap: 12px;
+			}
+			#mobile-actions {
+				bottom: 15px;
+				right: 20px;
+				gap: 12px;
+			}
+			.control-btn {
+				width: 58px;
+				height: 58px;
+			}
+			.control-btn svg {
+				width: 24px;
+				height: 24px;
+			}
+			.jump-btn {
+				width: 68px;
+				height: 68px;
+			}
+			.jump-btn svg {
+				width: 28px;
+				height: 28px;
+			}
+			#floating-fs-btn {
+				top: 15px;
+				right: 20px;
+				width: 46px;
+				height: 46px;
+			}
 		}
     </style>
 	
