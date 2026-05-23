@@ -555,16 +555,22 @@
 
 		// Mobile detection
 		var isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
-			|| (navigator.maxTouchPoints > 0 && window.innerWidth <= 1024);
+			|| (navigator.maxTouchPoints > 0 && window.innerWidth <= 1024)
+			|| ('ontouchstart' in window)
+			|| (window.location.search.indexOf('mobile=true') !== -1);
 
 		// Dynamic control updates based on Level
 		function updateMobileControls() {
 			if (!isMobileDevice) return;
 			
 			var runtime = (typeof cr_getC2Runtime !== 'undefined') ? cr_getC2Runtime() : null;
-			if (!runtime || !runtime.running_layout) return;
+			if (!runtime) return;
 			
-			var currentLayout = runtime.running_layout.fa; // Minified layout name
+			var runningLayout = runtime.ra || runtime.running_layout;
+			if (!runningLayout) return;
+			
+			var currentLayout = runningLayout.fa; // Minified layout name
+			console.log('Current layout ID:', currentLayout);
 			var controlsDiv = document.getElementById('mobile-controls');
 			if (!controlsDiv) return;
 			
